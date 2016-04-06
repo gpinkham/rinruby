@@ -608,6 +608,7 @@ def initialize(*args)
   def assign_engine(name, value)
     original_value = value
     # Special assign for matrixes
+    puts "value is kind of: #{value.class.name}"
     if value.kind_of?(::Matrix)
       values=value.row_size.times.collect {|i| value.column_size.times.collect {|j| value[i,j]}}.flatten
       eval "#{name}=matrix(c(#{values.join(',')}), #{value.row_size}, #{value.column_size}, TRUE)"
@@ -649,14 +650,14 @@ def initialize(*args)
             type = RinRuby_Type_Double
           end
         else
-          raise "Unsupported data type on Ruby's end"
+          raise "RR1: Unsupported data type on Ruby's end"
         end
       rescue
-        raise "Unsupported data type on Ruby's end"
+        raise "RR2: Unsupported data type on Ruby's end"
       end
       length = value.length
     else
-      raise "Unsupported data type on Ruby's end"
+      raise "RR3: Unsupported data type on Ruby's end"
     end
     @writer.puts "#{name} <- rinruby_get_value()"
 
@@ -679,7 +680,7 @@ def initialize(*args)
     @socket.read(4,buffer)
     type = to_signed_int(buffer.unpack('N')[0].to_i)
     if ( type == RinRuby_Type_Unknown )
-      raise "Unsupported data type on R's end"
+      raise "RR4: Unsupported data type on R's end"
     end
     if ( type == RinRuby_Type_NotFound )
       return nil
@@ -716,7 +717,7 @@ def initialize(*args)
       })
       def result.length; 2;end
     else
-      raise "Unsupported data type on Ruby's end"
+      raise "RR5: Unsupported data type on Ruby's end: #{type}"
     end
     result
   end
